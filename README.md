@@ -8,8 +8,11 @@ Each step admits now the following keywords: `on-start`, `on-complete`, `on-succ
 The values should be functions with the signature `(fn [ctx step-res]`. If the value is not a function, and a `callbacks-wrapper-fn` function is given
 on the configuration, and that function will be called with that value.
 
+### Global callbacks
+Global callbacks can now be a value that will be passed to the `callbacks-wrapper-fn`.
+
 ### callbacks-wrapper-fn
-As described above, if a `callbacks-wrapper-fn` function is provided on the configuration, the steps callbacks can be values instead of functions,
+As described above, if a `callbacks-wrapper-fn` function is provided on the configuration, the steps and global callbacks can be values instead of functions,
 and those values will be passed to the callback wrapper function. It should have the signature `(fn [callback-value ctx step-res])`.
 Can be used to dispatch events instead of calling functions. And because the values of the step callbacks are now data, it can be tested.
 
