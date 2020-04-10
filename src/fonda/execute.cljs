@@ -92,16 +92,14 @@
   "Tries running the given step (a tap step, or a processor step).
   If an exception gets triggerd, an exception is added on the context.
   If an anomaly is returned, an anomaly is added to the context"
-  [{:as fonda-ctx :keys [ctx mock-fns processor-results-stack]}
+  [{:as fonda-ctx :keys [ctx mock-fns ]}
    {:as step :keys [processor tap inject name on-start]}]
 
   ;; Calls the on-start callback with the context
   (when on-start ((get-callback-fn fonda-ctx on-start) ctx))
   (try
-    (let [last-res (last processor-results-stack)
-
+    (let [
           ;; First step only gets the ctx, next ones receive last-result,ctx
-          args (if (empty? processor-results-stack) [ctx] [ctx last-res])
 
           ; fn is an alias for processor
           processor (or processor (:fn step))
@@ -109,7 +107,7 @@
           ;; If there is a mocked-fn with the same name, it will used the mocked-fn instead
           mocked-fn (when name (get mock-fns (keyword name)))
           f (or mocked-fn processor tap inject)
-          res (apply f args)
+          res (f ctx)
           assoc-result-fn* (cond
                             tap (partial assoc-tap-result fonda-ctx)
                             processor (partial assoc-processor-result fonda-ctx step)
